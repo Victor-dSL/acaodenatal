@@ -93,14 +93,14 @@ if (statsCount.count === 0 && fs.existsSync(JSON_BACKUP)) {
     `).run(
       c.title || 'Campanha de Natal Solidário 2024',
       c.subtitle || 'Natal de Esperança - Multiplique o Amor neste Natal',
-      c.targetAmount || 20000,
-      c.currentAmount || 14850,
-      c.targetBaskets || 200,
-      c.currentBaskets || 148,
-      c.beneficiaries || 592,
-      c.pixKey || 'pix@igrejacomunidade.org.br',
-      c.pixReceiver || 'Paróquia da Comunidade',
-      c.pixCity || 'São Paulo'
+      c.targetAmount != null ? c.targetAmount : 10000,
+      c.currentAmount != null ? c.currentAmount : 0,
+      c.targetBaskets != null ? c.targetBaskets : 100,
+      c.currentBaskets != null ? c.currentBaskets : 0,
+      c.beneficiaries != null ? c.beneficiaries : 0,
+      c.pixKey || '013253bc-5ac2-43d3-8845-376a205ae6ff',
+      c.pixReceiver || 'JOAO VICTOR DE',
+      c.pixCity || 'Caucaia'
     );
 
     if (Array.isArray(initial.angels)) {

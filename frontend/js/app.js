@@ -23,9 +23,9 @@
     const num = parseFloat(val) || 0;
     if (num >= 100) {
       const baskets = (num / 100).toFixed(1).replace('.0', '');
-      return `Com <strong class="text-primary font-bold">R$ ${num.toFixed(2)}</strong> você garante aproximadamente <strong>${baskets} cestas natalinas completas</strong>!`;
+      return `Com <strong class="text-primary font-bold">R$ ${num.toLocaleString('pt-BR')},00</strong> você garante aproximadamente <strong>${baskets} cestas natalinas completas</strong> de ceia farta!`;
     }
-    return `Com <strong class="text-primary font-bold">R$ ${num.toFixed(2)}</strong> você multiplica o amor e enche uma mesa de esperança neste Natal.`;
+    return `Com <strong class="text-primary font-bold">R$ ${num.toLocaleString('pt-BR')},00</strong> você multiplica o amor e enche uma mesa de esperança neste Natal.`;
   }
 
   // Elementos do DOM - Seletores de Valores
@@ -33,6 +33,9 @@
   const btnAmountPlus = document.getElementById('btn-amount-plus');
   const customAmountWrapper = document.getElementById('custom-amount-wrapper');
   const customAmountInput = document.getElementById('custom-amount-input');
+  const btnCustomMinus1 = document.getElementById('btn-custom-minus-1');
+  const btnCustomPlus1 = document.getElementById('btn-custom-plus-1');
+  const customAmountError = document.getElementById('custom-amount-error');
   const btnApplyCustomVal = document.getElementById('btn-apply-custom-val');
   const impactPhrase = document.getElementById('impact-phrase');
 
@@ -105,23 +108,36 @@
 
   function updateCampaignUI(camp) {
     if (!camp) return;
-    const formattedAmount = `R$ ${camp.currentAmount.toLocaleString('pt-BR')}`;
-    const percent = Math.min(100, Math.round((camp.currentAmount / camp.targetAmount) * 100));
+    const current = Number(camp.currentAmount || 0);
+    const target = Number(camp.targetAmount || 10000);
+    const formattedAmount = `R$ ${current.toLocaleString('pt-BR')}`;
+    const percent = Math.min(100, Math.round((current / target) * 100)) || 0;
 
     if (statCurrentAmount) statCurrentAmount.innerText = formattedAmount;
     if (statProgressPercent) statProgressPercent.innerText = `${percent}% Concluído`;
     if (statProgressBar) statProgressBar.style.width = `${percent}%`;
     if (statStarPin) statStarPin.style.left = `calc(${percent}% - 10px)`;
-    if (statCurrentBaskets) statCurrentBaskets.innerText = `${camp.currentBaskets} cestas natalinas garantidas de ${camp.targetBaskets} pretendidas`;
-    if (statCounterBaskets) statCounterBaskets.innerText = `${camp.currentBaskets} / ${camp.targetBaskets}`;
-    if (statCounterPeople) statCounterPeople.innerText = `${camp.beneficiaries} Pessoas`;
+    if (statCurrentBaskets) statCurrentBaskets.innerText = `${camp.currentBaskets || 0} cestas natalinas garantidas de ${camp.targetBaskets || 100} pretendidas`;
+    if (statCounterBaskets) statCounterBaskets.innerText = `${camp.currentBaskets || 0} / ${camp.targetBaskets || 100}`;
+    if (statCounterPeople) statCounterPeople.innerText = `${camp.beneficiaries || 0} Pessoas`;
   }
 
   function renderDonations(donations) {
-    if (!feedContainer || !donations || !donations.length) return;
+    if (!feedContainer) return;
     feedContainer.innerHTML = '';
 
-    donations.slice(0, 6).forEach(item => {
+    if (!donations || donations.length === 0) {
+      feedContainer.innerHTML = `
+        <div class="p-6 text-center text-on-surface-variant italic bg-surface-container-low rounded-2xl border border-dashed border-outline-variant/40 animate-fadeIn">
+          <span class="material-symbols-outlined text-3xl text-secondary mb-1">volunteer_activism</span>
+          <p class="font-semibold text-sm text-primary">Seja o primeiro a doar e acender esta chama de esperança!</p>
+          <p class="text-xs text-on-surface-variant/80 mt-1">Sua doação aparecerá aqui em tempo real assim que confirmada.</p>
+        </div>
+      `;
+      return;
+    }
+
+    donations.slice(0, 8).forEach(item => {
       const article = document.createElement('article');
       article.className = 'p-space-sm rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-1.5 transition-all hover:shadow-md';
       article.innerHTML = `
@@ -136,7 +152,7 @@
             </div>
           </div>
           <div class="flex flex-col items-end">
-            <span class="font-label-md text-label-md text-primary font-bold">R$ ${item.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+            <span class="font-label-md text-label-md text-primary font-bold">R$ ${Number(item.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
             <span class="inline-flex items-center gap-0.5 text-secondary font-label-sm text-[11px] font-medium">
               <span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">verified</span>
               Confirmado PIX
@@ -151,7 +167,45 @@
     });
   }
 
-  // 2. Seleção de Valores: 5, 10, 20, 50, 100 ou + (Custom)
+  // Funções Auxiliares da Máscara de Moeda (de R$ 100 pra cima, de 1 em 1 real)
+  function parseCustomAmount(val) {
+    if (typeof val === 'number') return Math.floor(val);
+    const digits = String(val || '').replace(/\D/g, '');
+    if (!digits) return 100;
+    return parseInt(digits, 10);
+  }
+
+  function formatBRLMask(num) {
+    return Number(num).toLocaleString('pt-BR') + ',00';
+  }
+
+  function updateCustomAmount(val, syncInput = true) {
+    let intVal = parseCustomAmount(val);
+    const isBelowMin = intVal < 100;
+
+    if (customAmountError) {
+      if (isBelowMin) {
+        customAmountError.classList.remove('hidden');
+        if (customAmountInput) customAmountInput.classList.add('border-red-400');
+      } else {
+        customAmountError.classList.add('hidden');
+        if (customAmountInput) customAmountInput.classList.remove('border-red-400');
+      }
+    }
+
+    selectedAmount = isBelowMin ? 100 : intVal;
+
+    if (syncInput && customAmountInput) {
+      customAmountInput.value = formatBRLMask(intVal);
+    }
+    if (formAmountInput) formAmountInput.value = selectedAmount;
+    if (impactPhrase) impactPhrase.innerHTML = getCustomImpactText(selectedAmount);
+    if (generatePixLabel) {
+      generatePixLabel.innerText = `Gerar QR Code PIX de R$ ${selectedAmount.toLocaleString('pt-BR')},00`;
+    }
+  }
+
+  // 2. Seleção de Valores: 5, 10, 20, 50, 100 ou + (Custom de 100 pra cima)
   amountButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const val = btn.getAttribute('data-val');
@@ -165,16 +219,15 @@
       btn.className = 'amount-btn py-2.5 px-1 rounded-xl bg-primary text-on-primary font-bold text-xs sm:text-sm text-center shadow-md transition-all active:scale-95';
 
       if (val === 'custom') {
-        // Exibe campo para digitar outro valor
+        // Exibe campo para digitar outro valor (de 100 pra cima)
         if (customAmountWrapper) {
           customAmountWrapper.classList.remove('hidden');
-          if (customAmountInput) customAmountInput.focus();
-        }
-        if (customAmountInput && customAmountInput.value) {
-          selectedAmount = parseFloat(customAmountInput.value) || 50;
-          if (impactPhrase) impactPhrase.innerHTML = getCustomImpactText(selectedAmount);
-        } else {
-          if (impactPhrase) impactPhrase.innerHTML = 'Digite o valor desejado no campo acima.';
+          if (customAmountInput) {
+            updateCustomAmount(customAmountInput.value || 100, true);
+            customAmountInput.focus();
+            const len = customAmountInput.value.length;
+            customAmountInput.setSelectionRange(len - 3, len - 3);
+          }
         }
       } else {
         // Esconde campo custom
@@ -185,53 +238,97 @@
         if (impactPhrase && impactTexts[val]) {
           impactPhrase.innerHTML = impactTexts[val];
         }
-      }
 
-      // Se já houver QR Code aberto na tela, avisa para gerar o novo valor
-      if (generatePixLabel) {
-        generatePixLabel.innerText = `Gerar QR Code PIX de R$ ${selectedAmount.toFixed(2)}`;
+        if (generatePixLabel) {
+          generatePixLabel.innerText = `Gerar QR Code PIX de R$ ${selectedAmount.toFixed(2)}`;
+        }
       }
     });
   });
 
-  // Atualização em tempo real quando o usuário digita no campo +
+  // Eventos da Máscara de Moeda no Input Personalizado (de 1 em 1 real)
   if (customAmountInput) {
+    // Máscara dinâmica enquanto digita
     customAmountInput.addEventListener('input', () => {
-      const val = parseFloat(customAmountInput.value);
-      if (!isNaN(val) && val > 0) {
-        selectedAmount = val;
-        if (formAmountInput) formAmountInput.value = selectedAmount;
-        if (impactPhrase) impactPhrase.innerHTML = getCustomImpactText(val);
-        if (generatePixLabel) generatePixLabel.innerText = `Gerar QR Code PIX de R$ ${selectedAmount.toFixed(2)}`;
+      const rawDigits = customAmountInput.value.replace(/\D/g, '');
+      if (!rawDigits) {
+        customAmountInput.value = '';
+        if (customAmountError) customAmountError.classList.remove('hidden');
+        return;
       }
+      const intVal = parseInt(rawDigits, 10);
+      updateCustomAmount(intVal, false);
+      customAmountInput.value = intVal.toLocaleString('pt-BR') + ',00';
+
+      // Mantém o cursor antes dos centavos (,00)
+      const len = customAmountInput.value.length;
+      customAmountInput.setSelectionRange(len - 3, len - 3);
+    });
+
+    // Ao sair do campo, ajusta para o mínimo de R$ 100 caso tenha ficado menor
+    customAmountInput.addEventListener('blur', () => {
+      let intVal = parseCustomAmount(customAmountInput.value);
+      if (intVal < 100) intVal = 100;
+      updateCustomAmount(intVal, true);
+    });
+
+    // Suporte às setas do teclado (Cima = +1 real, Baixo = -1 real)
+    customAmountInput.addEventListener('keydown', (e) => {
+      let intVal = parseCustomAmount(customAmountInput.value);
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        updateCustomAmount(intVal + 1, true);
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (intVal > 100) updateCustomAmount(intVal - 1, true);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (intVal < 100) intVal = 100;
+        updateCustomAmount(intVal, true);
+      }
+    });
+  }
+
+  // Botões de ajuste rápido de 1 em 1 real (- R$ 1 e + R$ 1)
+  if (btnCustomMinus1) {
+    btnCustomMinus1.addEventListener('click', () => {
+      let intVal = parseCustomAmount(customAmountInput ? customAmountInput.value : 100);
+      if (intVal > 100) {
+        updateCustomAmount(intVal - 1, true);
+      }
+    });
+  }
+
+  if (btnCustomPlus1) {
+    btnCustomPlus1.addEventListener('click', () => {
+      let intVal = parseCustomAmount(customAmountInput ? customAmountInput.value : 100);
+      updateCustomAmount(intVal + 1, true);
     });
   }
 
   if (btnApplyCustomVal && customAmountInput) {
     btnApplyCustomVal.addEventListener('click', () => {
-      const val = parseFloat(customAmountInput.value);
-      if (!isNaN(val) && val > 0) {
-        selectedAmount = val;
-        if (impactPhrase) impactPhrase.innerHTML = getCustomImpactText(val);
-        if (generatePixLabel) generatePixLabel.innerText = `Gerar QR Code PIX de R$ ${selectedAmount.toFixed(2)}`;
-      } else {
-        alert('Por favor, informe um valor válido para a doação.');
+      let intVal = parseCustomAmount(customAmountInput.value);
+      if (intVal < 100) {
+        intVal = 100;
       }
+      updateCustomAmount(intVal, true);
     });
   }
 
   // 3. Geração do QR Code PIX Asaas
   if (btnGenerateAsaasPix) {
     btnGenerateAsaasPix.addEventListener('click', async () => {
-      // Se estava no modo custom e o input tem valor
+      // Se estava no modo custom
       if (customAmountInput && !customAmountWrapper.classList.contains('hidden')) {
-        const val = parseFloat(customAmountInput.value);
-        if (isNaN(val) || val <= 0) {
-          alert('Por favor, digite o valor que deseja doar.');
+        let intVal = parseCustomAmount(customAmountInput.value);
+        if (intVal < 100) {
+          alert('Para valores personalizados, a doação mínima é de R$ 100,00 (de 1 em 1 real).');
+          updateCustomAmount(100, true);
           customAmountInput.focus();
           return;
         }
-        selectedAmount = val;
+        selectedAmount = intVal;
       }
 
       const donor = pixDonorName ? pixDonorName.value.trim() : '';
