@@ -1,0 +1,102 @@
+/* CSS Custom Styles para Campanha de Natal Solidário */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    overscroll-behavior-y: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f7f3ed;
+}
+::-webkit-scrollbar-thumb {
+  background: #debfbf;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a93441;
+}
+
+/* Glassmorphism Styles */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(212, 163, 89, 0.22);
+}
+
+.glass-card-elevated {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 163, 89, 0.35);
+  box-shadow: 0 16px 36px rgba(107, 1, 25, 0.08);
+}
+
+/* Animations */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(212, 163, 89, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(212, 163, 89, 0.6);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-float-1 {
+  animation: floatSlow 5s ease-in-out infinite;
+}
+.animate-float-2 {
+  animation: floatSlow 6.2s ease-in-out infinite 0.7s;
+}
+.animate-float-3 {
+  animation: floatSlow 4.8s ease-in-out infinite 1.4s;
+}
+.animate-float-4 {
+  animation: floatSlow 5.6s ease-in-out infinite 2.1s;
+}
+.animate-float-5 {
+  animation: floatSlow 5.2s ease-in-out infinite 2.8s;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.glow-candle {
+  animation: pulseGlow 3s infinite ease-in-out;
+}
+

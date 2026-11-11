@@ -1,0 +1,19 @@
+# Arquivos de ambiente e segredos (NUNCA SUBIR)
+.env
+*.env
+backend/serviceAccountKey.json
+*serviceAccount*.json
+
+# Dependências
+node_modules/
+backend/node_modules/
+
+# Banco de dados local
+backend/data/*.db
+backend/data/*.db-wal
+backend/data/*.db-shm
+
+# Logs e sistema
+*.log
+.DS_Store
+Thumbs.db

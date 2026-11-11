@@ -1,0 +1,100 @@
+{
+  "campaign": {
+    "title": "Campanha de Natal Solidário 2024",
+    "subtitle": "Natal de Esperança - Multiplique o Amor neste Natal",
+    "targetAmount": 20000,
+    "currentAmount": 14850,
+    "targetBaskets": 200,
+    "currentBaskets": 148,
+    "beneficiaries": 592,
+    "pixKey": "pix@igrejacomunidade.org.br",
+    "pixReceiver": "Paróquia da Comunidade",
+    "pixCity": "São Paulo"
+  },
+  "angels": [
+    {
+      "id": 1,
+      "name": "Família Silveira",
+      "amount": 1500,
+      "badge": "★ Destaque",
+      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAwH4Dalv90WWf8HB_xBb1PRf8XDmdqFZ9A84oqN44TDFlel50aK7_Z_xF1xpxCuwpKDzFcDuQJyftH3kZheL1HKDPNmkOUkuQl4LpguZeNLyC9KXpF79ECUQEIE7PLZD_yUMpShBqVqqxhUYXJdvo34-o2j4AUzedXbOyMw3fWfSCmD9vXuA6Ci0MM0lUgnvam7npSqXp9l0ZsgN1gBREvT-dTPSJSgsxIi1OqFy4"
+    },
+    {
+      "id": 2,
+      "name": "Dona Maria C.",
+      "amount": 1000,
+      "badge": "★",
+      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuCetj0z5QW2QjmK0IIn6DTT91bHuSaKZ9o9NtN-fSwsMHMVsn60Am6EPUlQqamfQiABWXILZOdKQ-3b8F42cy8WTnkJi3fchGfZki6jUAbtFc9S7Zx_LPRnGPMC4wePH5f_vbBzz8_nwyR5NYUOZA98izYtrVepJd-oeOgz22PjmGiWiikkJsiW04Ac9kiXR5GYK4eRO6Rh-DIoFdTWQthduGyeiU1YFnuAfZ-YCHM"
+    },
+    {
+      "id": 3,
+      "name": "Marcos & Ana",
+      "amount": 850,
+      "badge": "★",
+      "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuCHKNGN1KYqRjNYrgpnEIOFDtzPMhnj8GEmPhjb2PVxqH2EjGyeFH-tsAvdw1GijO9mV69zyUdqG3AgzaFpJGRuzg4qsZ6QNO-wW0u-ISbGgwse_BgqBLcOWetM2VAeED3rnolctC6opejdj2jEbRm6_at7C7CzuYHEX4hAikgPfZrHGOIC5RdqIE_8q3I4NZSAMfn3JqQhLe9UyJ5Orrec9omUPmHWq2LKPum7oL0"
+    },
+    {
+      "id": 4,
+      "name": "Jovens da Fé",
+      "amount": 600,
+      "icon": "group",
+      "badge": "Grupo"
+    },
+    {
+      "id": 5,
+      "name": "Pastoral Caridade",
+      "amount": 500,
+      "icon": "church",
+      "badge": "Pastoral"
+    }
+  ],
+  "donations": [
+    {
+      "id": 1,
+      "donor": "Beatriz Lima",
+      "initials": "BL",
+      "amount": 150.00,
+      "time": "Hoje, às 14:28",
+      "message": "Que o amor de Cristo alcance todos os lares!",
+      "verified": true
+    },
+    {
+      "id": 2,
+      "donor": "Carlos Eduardo S.",
+      "initials": "CE",
+      "amount": 50.00,
+      "time": "Hoje, às 13:45",
+      "message": "Uma feliz ceia para as crianças!",
+      "verified": true
+    },
+    {
+      "id": 3,
+      "donor": "Doador Anônimo",
+      "initials": "AN",
+      "amount": 200.00,
+      "time": "Hoje, às 12:10",
+      "message": "Em honra e glória de Jesus",
+      "anonymous": true,
+      "verified": true
+    },
+    {
+      "id": 4,
+      "donor": "Família Ribeiro",
+      "initials": "FR",
+      "amount": 80.00,
+      "time": "Ontem, 23/12 às 20:15",
+      "message": "Deus abençoe essa obra linda",
+      "verified": true
+    },
+    {
+      "id": 5,
+      "donor": "Lucas & Patrícia",
+      "initials": "LP",
+      "amount": 300.00,
+      "time": "Ontem, 23/12 às 18:04",
+      "message": "Paz e esperança neste Natal",
+      "verified": true
+    }
+  ]
+}
+

@@ -1,0 +1,20 @@
+{
+  "name": "campanha-natal-solidario-backend",
+  "version": "1.0.0",
+  "description": "API Backend para a Campanha de Natal Solidário",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "natal",
+    "doacao",
+    "pix",
+    "campanha"
+  ],
+  "author": "Paróquia da Comunidade",
+  "license": "ISC",
+  "dependencies": {
+    "firebase-admin": "^14.5.0"
+  }
+}
